@@ -28,7 +28,7 @@ const Page = () => {
   };
 
   return (
-    <div className="page-container">
+    <div className="page">
       {/* Sección Principal */}
       <section className="main-section">
         <h2 className="title">Encuentra lo mejor del mundo gamer en Quito</h2>

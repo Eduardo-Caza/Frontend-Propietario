@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Opciones = () => {
     return (
-        <div className="navbar">
+        <div className="opciones">
             <div className="wrapper">
                 <div className="empresa">
                     QUITOTECH
