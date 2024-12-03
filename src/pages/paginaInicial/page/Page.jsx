@@ -183,7 +183,7 @@ const Page = () => {
             Cerrar
           </Button>
           <Button
-            href="/path/to/apk" // Reemplaza con la URL del APK
+            href="https://github.com/Eduardo-Caza/Backend-QT/blob/master/src/QuitoTech.apk" // Reemplaza con la URL del APK
             target="_blank"
             style={{
               backgroundColor: "#9b4ddb",
