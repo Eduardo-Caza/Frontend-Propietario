@@ -14,7 +14,13 @@ const Lmod = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
+    // Verificar si las credenciales corresponden a las de administrador
+    if (email === "admin@admin.com" && password === "admin123") {
+      window.location.href = "https://frontend-qt.onrender.com"; // Redirigir al sitio externo
+      return;
+    }
+  
     try {
       const url = `${import.meta.env.VITE_BACKEND_URL}/propietario/login`;
       const response = await fetch(url, {
@@ -24,10 +30,10 @@ const Lmod = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-
+  
         // Guardar los datos del usuario en localStorage
         localStorage.setItem("id_usuario", data._id);
         localStorage.setItem("ImagenUrl", data.ImagenUrl);
@@ -35,7 +41,7 @@ const Lmod = () => {
         localStorage.setItem("apellido", data.apellido);
         localStorage.setItem("email", data.email);
         localStorage.setItem("token", data.token); // Guardar el token en localStorage
-
+  
         // Obtener el id de la tienda del usuario
         const tiendaResponse = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/propietario/tienda/${data._id}`
@@ -46,7 +52,7 @@ const Lmod = () => {
         } else {
           console.error("No se encontró la tienda para este usuario");
         }
-
+  
         // Redirigir al usuario
         navigate("/home");
       } else {
@@ -57,6 +63,7 @@ const Lmod = () => {
       setErrorMessage("Error al conectar con el servidor. Inténtalo más tarde.");
     }
   };
+  
 
   const handleModalClose = () => {
     setShowModal(false);
