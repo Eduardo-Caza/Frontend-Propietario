@@ -2,6 +2,7 @@
     height: 600px;
     padding: 20px;
     background-color: white;
+    min-height: 90vh;
     .datatableTitle{
       width: 100%;
       font-size: 24px;
@@ -73,6 +74,22 @@
         border-radius: 5px;
         color: crimson;
         border: 1px dotted rgba(220, 20, 60, 0.6);
+        cursor: pointer;
+      }
+
+      .updateButton {
+        padding: 2px 5px;
+        border-radius: 5px;
+        color: rgb(200, 20, 220);
+        border: 1px dotted rgba(200, 20, 220, 0.6);
+        cursor: pointer;
+      }
+
+      .stateButton {
+        padding: 2px 5px;
+        border-radius: 5px;
+        color: rgb(20, 220, 143);
+        border: 1px dotted rgb(20, 220, 143, 0.6);
         cursor: pointer;
       }
     }

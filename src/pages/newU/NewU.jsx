@@ -3,6 +3,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useState } from "react";
+import Swal from "sweetalert2"; // Importa SweetAlert
 
 const NewProduct = () => {
   const [file, setFile] = useState(null);
@@ -21,24 +22,39 @@ const NewProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.nombre || !formData.categoria || !formData.cantidad || !formData.precio) {
-      alert("Por favor, completa todos los campos.");
+  
+    // Verificación de campos vacíos usando SweetAlert
+    if (!formData.nombre || !formData.categoria || !formData.cantidad || !formData.precio || !file) {
+      Swal.fire({
+        icon: "error",
+        title: "¡Error!",
+        text: "Por favor, completa todos los campos y selecciona una imagen.",
+      });
       return;
     }
-
+  
+    const data = new FormData();
+    data.append("Nombre", formData.nombre);
+    data.append("Categoria", formData.categoria);
+    data.append("Cantidad", formData.cantidad);
+    data.append("precio", formData.precio);
+    data.append("id_tienda", formData.id_tienda);
+    data.append("imagen", file);
+  
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/producto/registro`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        body: data,
       });
-
+  
       const result = await response.json();
       if (response.ok) {
-        alert("Producto registrado exitosamente");
+        // Alerta de éxito con SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: "¡Éxito!",
+          text: "Producto registrado exitosamente.",
+        });
         setFormData({
           nombre: "",
           categoria: "",
@@ -48,13 +64,23 @@ const NewProduct = () => {
         });
         setFile(null);
       } else {
-        alert(`Error: ${result.msg}`);
+        // Alerta de error con SweetAlert
+        Swal.fire({
+          icon: "error",
+          title: "¡Error!",
+          text: `Error: ${result.msg}`,
+        });
       }
     } catch (error) {
       console.error("Error al registrar el producto:", error);
-      alert("Hubo un problema al enviar los datos.");
+      // Alerta de error con SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "¡Error!",
+        text: "Hubo un problema al enviar los datos.",
+      });
     }
-  };
+  };  
 
   return (
     <div className="newProduct">
@@ -66,11 +92,7 @@ const NewProduct = () => {
           <div className="formWrapper">
             <div className="imagePreview">
               <img
-                src={
-                  file
-                    ? URL.createObjectURL(file)
-                    : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-                }
+                src={file ? URL.createObjectURL(file) : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
                 alt="Vista previa"
               />
             </div>

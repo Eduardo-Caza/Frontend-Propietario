@@ -1,10 +1,11 @@
 .newProduct {
   display: flex;
+
   .newProductContainer {
     flex: 1;
-    padding: 20px;
+    padding: 0px;
     background-color: #f9f9f9;
-    
+
     .content {
       h1 {
         margin-bottom: 20px;
@@ -14,7 +15,7 @@
 
       .formWrapper {
         display: flex;
-        gap: 10px;
+        gap: 0px;
 
         .imagePreview {
           flex: 1;
@@ -51,10 +52,12 @@
               color: #555;
             }
 
-            input {
+            input,
+            select {
               padding: 10px;
               border: 1px solid #ccc;
               border-radius: 5px;
+              font-size: 14px; /* Asegura que el texto sea del mismo tamaño */
             }
           }
 

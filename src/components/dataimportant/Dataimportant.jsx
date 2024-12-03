@@ -6,44 +6,23 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const Datatable = () => {
-  const [productosActivos, setProductosActivos] = useState([]);
-  const [productosInactivos, setProductosInactivos] = useState([]);
+  const [productos, setProductos] = useState([]);
 
-  // Función para listar productos activos
-  const listarProductosActivos = async () => {
+  // Función para listar todos los productos
+  const listarProductos = async () => {
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/productos/enstock`;
+      const url = `${import.meta.env.VITE_BACKEND_URL}/productos`;
       const respuesta = await axios.get(url);
-      setProductosActivos(
+      setProductos(
         respuesta.data.map((producto) => ({
           id: producto._id,
-          nombre: producto.nombre,
-          descripcion: producto.descripcion,
+          Nombre: producto.Nombre,
           precio: producto.precio,
           estado: producto.Estado ? "Activo" : "Inactivo",
         }))
       );
     } catch (error) {
-      console.error("Error al obtener los productos activos:", error);
-    }
-  };
-
-  // Función para listar productos inactivos
-  const listarProductosInactivos = async () => {
-    try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/productos/inactivos`;
-      const respuesta = await axios.get(url);
-      setProductosInactivos(
-        respuesta.data.map((producto) => ({
-          id: producto._id,
-          nombre: producto.nombre,
-          descripcion: producto.descripcion,
-          precio: producto.precio,
-          estado: producto.Estado ? "Activo" : "Inactivo",
-        }))
-      );
-    } catch (error) {
-      console.error("Error al obtener los productos inactivos:", error);
+      console.error("Error al obtener los productos:", error);
     }
   };
 
@@ -53,8 +32,7 @@ const Datatable = () => {
       const url = `${import.meta.env.VITE_BACKEND_URL}/producto/estado/${idProducto}`;
       const respuesta = await axios.put(url);
       Swal.fire("Estado cambiado", respuesta.data.msg, "success");
-      listarProductosActivos();
-      listarProductosInactivos();
+      listarProductos();
     } catch (error) {
       console.error("Error al cambiar el estado:", error);
     }
@@ -66,8 +44,7 @@ const Datatable = () => {
       const url = `${import.meta.env.VITE_BACKEND_URL}/producto/${idProducto}`;
       await axios.delete(url);
       Swal.fire("¡Eliminado!", "El producto ha sido eliminado.", "success");
-      listarProductosActivos();
-      listarProductosInactivos();
+      listarProductos();
     } catch (error) {
       console.error("Error al eliminar el producto:", error);
     }
@@ -91,15 +68,13 @@ const Datatable = () => {
   };
 
   useEffect(() => {
-    listarProductosActivos();
-    listarProductosInactivos();
+    listarProductos();
   }, []);
 
   // Configuración de columnas
   const columns = [
     { field: "id", headerName: "ID de Producto", width: 200 },
-    { field: "nombre", headerName: "Nombre", width: 150 },
-    { field: "descripcion", headerName: "Descripción", width: 300 },
+    { field: "Nombre", headerName: "Nombre", width: 150 },
     { field: "precio", headerName: "Precio", width: 100 },
     { field: "estado", headerName: "Estado", width: 120 },
   ];
@@ -108,7 +83,7 @@ const Datatable = () => {
     {
       field: "action",
       headerName: "Acciones",
-      width: 300,
+      width: 500,
       renderCell: (params) => (
         <div className="cellAction">
           <Link to={`/producto/${params.row.id}`} style={{ textDecoration: "none" }}>
@@ -137,30 +112,18 @@ const Datatable = () => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        Productos Activos
+        Productos
         <Link to="/productos/add" className="link">
           Registrar Nuevo Producto
         </Link>
       </div>
       <DataGrid
         className="datagrid"
-        rows={productosActivos}
+        rows={productos}
         columns={columns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
-        checkboxSelection
-      />
-
-      <div className="datatableTitle" style={{ marginTop: "20px" }}>
-        Productos Inactivos
-      </div>
-      <DataGrid
-        className="datagrid"
-        rows={productosInactivos}
-        columns={columns.concat(actionColumn)}
-        pageSize={9}
-        rowsPerPageOptions={[9]}
-        checkboxSelection
+        // checkboxSelection
       />
     </div>
   );
