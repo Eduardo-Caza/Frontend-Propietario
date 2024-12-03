@@ -183,9 +183,9 @@ export default function Profile() {
 
   return (
     <div className="profile">
-      <Sidebar />
+      <div><Sidebar /></div>
       <div className="profile-container">
-        <Navbar />
+        <div><Navbar /></div>
         <div className="profile-content">
           <div className="card">
             <div className="card-header">Información del Propietario</div>

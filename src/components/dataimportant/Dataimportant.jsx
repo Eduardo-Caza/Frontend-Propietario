@@ -73,8 +73,8 @@ const Datatable = () => {
 
   // Configuración de columnas
   const columns = [
-    { field: "id", headerName: "ID de Producto", width: 200 },
-    { field: "Nombre", headerName: "Nombre", width: 150 },
+    { field: "id", headerName: "ID de Producto", width: 250 },
+    { field: "Nombre", headerName: "Nombre", width: 250 },
     { field: "precio", headerName: "Precio", width: 100 },
     { field: "estado", headerName: "Estado", width: 120 },
   ];
@@ -83,15 +83,15 @@ const Datatable = () => {
     {
       field: "action",
       headerName: "Acciones",
-      width: 500,
+      width: 300,
       renderCell: (params) => (
         <div className="cellAction">
-          <Link to={`/producto/${params.row.id}`} style={{ textDecoration: "none" }}>
+          <Link to={`/productos/${params.row.id}`} style={{ textDecoration: "none" }}>
             <div className="viewButton">Detalle</div>
           </Link>
-          <Link to={`/producto/edit/${params.row.id}`} style={{ textDecoration: "none" }}>
+          {/* <Link to={`/producto/edit/${params.row.id}`} style={{ textDecoration: "none" }}>
             <div className="updateButton">Actualizar</div>
-          </Link>
+          </Link> */}
           <div
             className="stateButton"
             onClick={() => cambiarEstadoProducto(params.row.id)}

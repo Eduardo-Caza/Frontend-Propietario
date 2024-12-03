@@ -46,6 +46,7 @@ import Lmod from './pages/Lmod/Lmod.jsx';
 import {Actualizar} from './pages/UpdateEmail/UpdateEmail.jsx';
 import Profile from './pages/profile/Profile.jsx';
 import ProfileU from './pages/profileU/profileU.jsx';
+import ProductDetail from './pages/DetalleProd/DetalleProd.jsx'
 import {Confirmar} from './pages/Confirmemail/Confirmemail.jsx';
 import { Confirmartienda } from './pages/Confirmtienda/confirmtienda.jsx';
 import { productInputs, userInputs, tiendaInputs, moderadorInputs } from "./formSource";
@@ -56,10 +57,11 @@ import "./style/dark.scss"
 function App() {
   return (
       <BrowserRouter>
-        <AuthProvider>
+        {/* <AuthProvider> */}
           <Routes>
             <Route index element={<PaginaInicial />} />
-            <Route path="/" element={<Auth />}>
+            <Route path="/" >
+            {/* element={<Auth />} esto es el token despues ver para que se utilice aunque se refresque la pagina, se pone a lado de path /*/} 
               {/* <Route path="ingresar" element={<Ingresar />} /> */}
               {/* <Route path="registrar" element={<Registrar />} />
               <Route path="usuario/confirmar/:token" element={<Confirmar />} />
@@ -101,8 +103,9 @@ function App() {
               </Route>
               <Route path="productos">
                 <Route index element={<Mods/>}/>
-                <Route path=":modId" element={<Acount />} />
+                {/* <Route path=":modId" element={<Acount />} /> */}
                 <Route path="add" element={<NewU/>} />;
+                <Route path="/productos/:id" element={<ProductDetail />} />
               </Route>
               <Route path="users">
                 <Route index element={<Users/>}/>
@@ -112,7 +115,7 @@ function App() {
               <Route path="*" element={<NoEncontrada />} />
             </Route>
           </Routes>
-        </AuthProvider>
+        {/* </AuthProvider> */}
       </BrowserRouter>
   );
 }

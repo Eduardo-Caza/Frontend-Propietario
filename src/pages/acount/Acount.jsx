@@ -18,7 +18,7 @@ const Acount = () => {
     const fetchModerador = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/administrador/moderador/${modId}`
+          `${import.meta.env.VITE_BACKEND_URL}/propietario/perfil/${modId}`
         );
         setModerador(response.data); // Guardamos los datos del moderador
       } catch (err) {

@@ -1,0 +1,103 @@
+.product-detail {
+  display: flex;
+  background-color: white;
+}
+
+.product-detail-container {
+  display: flex;
+  flex-direction: column;
+  width: 85%;
+}
+
+.product-detail-content {
+  display: flex;
+  justify-content: center; /* Centra el card horizontalmente */
+  align-items: flex-start; /* Mantiene la parte superior en la alineación */
+  width: 100%;
+  height: 100%; /* Ocupa toda la altura disponible */
+  padding-top: 20px; /* Para separar del navbar */
+}
+
+.card {
+  background-color: #fff;
+  padding: 30px;
+  width: 100%;
+  max-width: 800px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center; /* Centra el contenido horizontalmente */
+  justify-content: center; /* Centra el contenido verticalmente */
+  transition: transform 0.3s ease;
+  margin-bottom: 20px;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .card-header {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .info-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 40px;
+
+    .product-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 14px;
+      color: #666;
+
+
+
+      .product-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+
+    .store-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: #666;
+    }
+  }
+  .card-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}
+.product-avatar {
+  width: 200px; /* Hacemos la imagen un poco más pequeña */
+  height: 200px;
+  border-radius: 50%; /* Imagen redonda */
+  object-fit: cover;
+}
