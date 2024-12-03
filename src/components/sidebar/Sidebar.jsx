@@ -21,20 +21,12 @@ import { useContext } from "react";
 const Sidebar = () => {
     const { dispatch } = useContext(DarkModeContext);
     const navigate = useNavigate(); // Hook para redirigir
+    const userId = localStorage.getItem("id_usuario")
 
     // Función para manejar el logout
     const handleLogout = () => {
         // Eliminar los datos del localStorage
-        localStorage.removeItem("id_usuario");
-        localStorage.removeItem("email");
-        localStorage.removeItem("role");
-        localStorage.removeItem("nombre");
-        localStorage.removeItem("apellido");
-        localStorage.removeItem("direccion");
-        localStorage.removeItem("telefono");
-        localStorage.removeItem("Usuario"); 
-        localStorage.removeItem("token");
-        // Redirigir al usuario a la página de login
+        localStorage.clear()
         navigate("/");
     };
 
@@ -74,8 +66,8 @@ const Sidebar = () => {
                             <span>Usuarios</span>
                         </li>
                     </Link> */}
-                    <p className="title">USER</p>
-                    <Link to="/profile" style={{ textDecoration: "none" }}>
+                    {/* <p className="title">USER</p>
+                    <Link to={`/propietario/perfil/${userId}`} style={{ textDecoration: "none" }}>
                         <li>
                             <AccountCircleIcon className="icon" />
                             <span>Profile</span>
@@ -84,7 +76,7 @@ const Sidebar = () => {
                     <li onClick={handleLogout}>
                         <LogoutIcon className="icon" />
                         <span>Logout</span>
-                    </li>
+                    </li>*/}
                 </ul>
             </div>
             {/* <div className="bottom">

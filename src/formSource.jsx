@@ -63,24 +63,6 @@ export const productInputs = [
     type: "number",
     placeholder: "Ejemplo: 100",
   },
-  {
-    id: 5,
-    label: "URL de la Imagen",
-    type: "text",
-    placeholder: "http://example.com/image.jpg",
-  },
-  // {
-  //   id: 6,
-  //   label: "ID de la tienda",
-  //   type: "text",
-  //   placeholder: "Ejemplo: 63f4c9e1e4b0d9a6e2c9f1e2",
-  // },
-  // {
-  //   id: 7,
-  //   label: "ID de la Imagen Publicada",
-  //   type: "text",
-  //   placeholder: "Ejemplo: image_public_id",
-  // },
 ];
 
 

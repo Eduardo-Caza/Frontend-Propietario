@@ -5,15 +5,28 @@ import LanguageIcon from '@mui/icons-material/Language';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import LogoutIcon from '@mui/icons-material/Logout';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ListIcon from '@mui/icons-material/List';
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const Navbar = () => {
     const {dispatch} = useContext(DarkModeContext)
+    const imagen = localStorage.getItem("ImagenUrl")
+    const userId = localStorage.getItem("id_usuario")
+    const navigate = useNavigate();
+
+    // Función para manejar el logout
+    const handleLogout = () => {
+        // Eliminar los datos del localStorage
+        localStorage.clear()
+        // Redirigir al usuario a la página de login
+        navigate("/");
+    };
+
     return(
         <div className="navbar">
             <div className="wrapper">
@@ -44,9 +57,13 @@ const Navbar = () => {
                         <ListIcon className="icon"/>
                     </div> */}
                     <div className="item">
-                        <Link to="/profile" style={{ textDecoration: "none" }}> 
-                            <img src="https://choicefineart.com/cdn/shop/products/portrait-series-bugs-bunny-983890.jpg?v=1688081893" alt="avatar" className="avatar"/>
+                        <Link to={`/propietario/perfil/${userId}`} style={{ textDecoration: "none" }}> 
+                            <img src={`${imagen}`} className="avatar"/>
                         </Link>
+                        <li onClick={handleLogout}>
+                            <LogoutIcon className="icon" />
+                            
+                        </li>
                     </div>
                 </div>
             </div>
