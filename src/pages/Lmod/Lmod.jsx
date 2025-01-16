@@ -16,7 +16,7 @@ const Lmod = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (email === "admin@admin.com" && password === "admin123") {
+    if (email === "4PTjE1T@gmail.com" && password === "7") {
       window.location.href = "https://frontend-qt.onrender.com";
       return;
     }
