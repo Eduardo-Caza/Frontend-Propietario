@@ -12,47 +12,51 @@ import Paper from "@mui/material/Paper";
 const List = () => {
   const [rows, setRows] = useState([]); // Estado para los productos
   const [loading, setLoading] = useState(true); // Estado para el loading
+  const [error, setError] = useState(""); // Estado para manejar errores
 
-  // Usar la URL de entorno para la API
-  const url = `${import.meta.env.VITE_BACKEND_URL}/administrador/ultimos-productos`; // Aquí está la URL configurada
+  const idTienda = localStorage.getItem("id_tienda"); // Obtener id de la tienda del localStorage
+  const url = `${import.meta.env.VITE_BACKEND_URL}/tienda/${idTienda}`; // URL con el id de tienda
 
   // UseEffect para hacer la solicitud al backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(url); // Usamos la URL construida con el entorno
-        setRows(response.data); // Actualiza los productos con la respuesta de la API
+        const response = await axios.get(url); // Hacemos la solicitud a la API
+
+        console.log("Respuesta de la API:", response.data); // Verificamos la estructura de la respuesta
+
+        // Revisamos si la respuesta tiene productos de una manera esperada
+        if (Array.isArray(response.data)) {
+          setRows(response.data); // Si la respuesta es un arreglo directo
+        } else if (response.data && Array.isArray(response.data.productos)) {
+          setRows(response.data.productos); // Si los productos están en response.data.productos
+        } else {
+          console.error("Estructura de datos inesperada:", response.data);
+          setError("Estructura de datos inesperada");
+        }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error al obtener los productos:", error);
+        setError("Error al obtener los productos");
       } finally {
-        setLoading(false); // Deja de mostrar el loading una vez que los datos se hayan cargado
+        setLoading(false);
       }
     };
 
     fetchProducts();
-  }, [url]); // Dependemos de la URL para asegurarnos que la solicitud se hace correctamente
+  }, [url]);
 
-  if (loading) {
-    return <div>Loading...</div>; // Muestra un mensaje de carga mientras se obtienen los datos
-  }
-
-  const formatDate = (date) => {
-    const parsedDate = new Date(date);
-    if (isNaN(parsedDate)) {
-      return "Invalid Date"; // Devuelve "Invalid Date" si el valor no es válido
-    }
-    return parsedDate.toLocaleDateString(); // Devuelve la fecha formateada
-  };
+  if (loading) return <div>Cargando...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
-    <TableContainer component={Paper} className="table">
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer>
+      <Table>
         <TableHead>
           <TableRow>
-            <TableCell className="tableCell">Producto</TableCell>
-            <TableCell className="tableCell">Categoria</TableCell>
-            <TableCell className="tableCell">Imagen</TableCell>
-            <TableCell className="tableCell">Estado</TableCell>
+            <TableCell>Nombre</TableCell>
+            <TableCell>Producto</TableCell>
+            <TableCell>Imagen</TableCell>
+            <TableCell>Estado</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -62,7 +66,18 @@ const List = () => {
               <TableCell className="tableCell">{row.Categoria}</TableCell>
               <TableCell className="tableCell">
                 <div className="cellWrapper">
-                  <img src={row.imagenUrl} alt={row.Nombre_producto} className="image" />
+                  <img
+                    className="image"
+                    src={row.imagenUrl}
+                    alt={row.Nombre_producto}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      marginRight: "10px",
+                      objectFit: "cover"
+                    }}
+                  />
                 </div>
               </TableCell>
               <TableCell className="tableCell">

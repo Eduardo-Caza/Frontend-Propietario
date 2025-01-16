@@ -7,16 +7,30 @@ import Swal from "sweetalert2";
 
 const Datatable = () => {
   const [productos, setProductos] = useState([]);
+  const id_tienda = localStorage.getItem("id_tienda");
 
-  // Función para listar todos los productos
+  // Función para listar productos
   const listarProductos = async () => {
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/productos`;
+      const url = id_tienda
+        ? `${import.meta.env.VITE_BACKEND_URL}/tienda/${id_tienda}`
+        : `${import.meta.env.VITE_BACKEND_URL}/productos`;
+
       const respuesta = await axios.get(url);
+
+      // Verificar y extraer los datos correctamente
+      const productosData = Array.isArray(respuesta.data)
+        ? respuesta.data
+        : respuesta.data.productos || []; // Ajusta "productos" si tu API tiene otra estructura
+        console.log(respuesta.data)
+
+      // Formatear los datos para el DataGrid
       setProductos(
-        respuesta.data.map((producto) => ({
+        productosData.map((producto) => ({
           id: producto._id,
           Nombre: producto.Nombre,
+          Imagen: producto.imagenUrl,
+          Cantidad: producto.Cantidad,
           precio: producto.precio,
           estado: producto.Estado ? "Activo" : "Inactivo",
         }))
@@ -73,12 +87,26 @@ const Datatable = () => {
 
   // Configuración de columnas
   const columns = [
-    { field: "id", headerName: "ID de Producto", width: 250 },
-    { field: "Nombre", headerName: "Nombre", width: 250 },
+    { field: "Nombre", headerName: "Nombre", width: 200 },
+    {
+      field: "Imagen",
+      headerName: "Imagen",
+      width: 120,
+      renderCell: (params) => (
+        <div className="imageCell">
+          <img
+            src={params.value || "/default-product.png"}
+            alt={params.row.Nombre}
+            className="productImage"
+          />
+        </div>
+      ),
+    },
+    { field: "Cantidad", headerName: "Cantidad", width: 100 },
     { field: "precio", headerName: "Precio", width: 100 },
     { field: "estado", headerName: "Estado", width: 120 },
   ];
-
+  
   const actionColumn = [
     {
       field: "action",
@@ -89,9 +117,6 @@ const Datatable = () => {
           <Link to={`/productos/${params.row.id}`} style={{ textDecoration: "none" }}>
             <div className="viewButton">Detalle</div>
           </Link>
-          {/* <Link to={`/producto/edit/${params.row.id}`} style={{ textDecoration: "none" }}>
-            <div className="updateButton">Actualizar</div>
-          </Link> */}
           <div
             className="stateButton"
             onClick={() => cambiarEstadoProducto(params.row.id)}
@@ -123,7 +148,6 @@ const Datatable = () => {
         columns={columns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
-        // checkboxSelection
       />
     </div>
   );

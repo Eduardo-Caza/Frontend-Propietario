@@ -174,3 +174,30 @@ html, body {
     color: $primary-color;
   }
 }
+
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4caf50; /* Verde */
+  border: none;
+  border-radius: 50%;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.floating-button:hover {
+  background-color: #45a049;
+}
+
+.floating-button-icon {
+  width: 24px;
+  height: 24px;
+}
+.alert-text {
+  color: #000000;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}

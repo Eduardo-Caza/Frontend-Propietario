@@ -1,25 +1,83 @@
-import notfound from '../assets/images/notfound.jpg'
-import {Link} from 'react-router-dom'
-
+import { Link } from 'react-router-dom'
 
 export const NoEncontrada = () => {
-    return (
-        
-        <div className="min-h-screen w-full flex justify-center items-center bg-[url('../assets/images/olvidarcontra.jpg')] bg-no-repeat bg-cover bg-center">
-        <div className="bg-gray-900 bg-opacity-90 p-10 rounded-lg shadow-lg w-11/12 max-w-md">
+  return (
+    <>
+      <style>
+        {`
+          .no-encontrada-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('../assets/images/olvidarcontra.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+          }
 
-            <img class="object-cover h-80 w-80 rounded-full border-4 border-solid border-slate-600" src={notfound} alt="image description"/>
+          .card-container {
+            background-color: white;
+            background-opacity: 0.9;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+          }
 
-            <div className="flex flex-col items-center justify-center">
-                
-                <p className="text-3xl md:text-4xl lg:text-5xl text-white mt-12">¿Te Perdiste?</p>
-                
-                <p className="md:text-lg lg:text-xl text-white mt-8">Lo sentimos, la página que intentas buscar no se encuentra disponible o no existe.</p>
-                
-                <Link to="/ingresar" className="inline-block mt-2 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300">ingresar</Link>
+          .notfound-image {
+            object-fit: cover;
+            height: 200px;
+            width: 200px;
+            border-radius: 50%;
+            border: 4px solid #4b5563; /* Slate border */
+            margin: 0 auto;
+          }
 
-            </div>
+          .message-container {
+            margin-top: 2rem;
+          }
+
+          .title {
+            font-size: 2.5rem;
+            color: #2d3748; /* Dark gray */
+            font-weight: 600;
+          }
+
+          .description {
+            font-size: 1.2rem;
+            color: #4a5568; /* Light gray */
+            margin-top: 1rem;
+          }
+
+          .ingresar-button {
+            display: inline-block;
+            margin-top: 1.5rem;
+            background-color: #6b46c1; /* Purple */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+          }
+
+          .ingresar-button:hover {
+            background-color: #553c9a; /* Darker purple */
+          }
+        `}
+      </style>
+      <div className="no-encontrada-container">
+        <div className="card-container">
+          <div className="message-container">
+            <p className="title">¿Te Perdiste?</p>
+            <p className="description">Lo sentimos, la página que intentas buscar no se encuentra disponible o no existe.</p>
+            <Link to="paginainicial" className="ingresar-button">Ingresar</Link>
+          </div>
         </div>
-        </div>
-    )
+      </div>
+    </>
+  )
 }

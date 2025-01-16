@@ -155,13 +155,13 @@ const Page = () => {
         </DialogTitle>
         <DialogContent>
           <p style={{ lineHeight: "1.5", fontSize: "1rem", color: "#ccc" }}>
-          Accede a productos gamer en Quito, realiza compras, encuentra tiendas cercanas y aprovecha ofertas exclusivas, todo desde tu dispositivo móvil.
+            Accede a productos gamer en Quito, realiza compras, encuentra tiendas cercanas y aprovecha ofertas exclusivas, todo desde tu dispositivo móvil.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            <img 
-              src={logoGamer} 
-              alt="logo-gamer" 
-              width={"25%"} 
+            <img
+              src={logoGamer}
+              alt="logo-gamer"
+              width={"25%"}
               height={"25%"}  // Asegúrate de que el ancho y la altura sean iguales
               style={{ borderRadius: '50%' }}  // Esto hace que la imagen sea redonda
             />
@@ -209,38 +209,37 @@ const Page = () => {
       </section>
 
       {/* Footer */}
-      <footer className="footer">
-        <div className="social-links">
-          <a
-            href="https://www.facebook.com"
-            className="button"
-            style={{ textDecoration: "none", color: "inherit" }}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FacebookIcon />
-          </a>
-          <a
-            href="https://www.GitHub.com"
-            className="button"
-            style={{ textDecoration: "none", color: "inherit" }}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <GitHubIcon />
-          </a>
-          <a
-            href="https://www.LinkedIn.com"
-            className="button"
-            style={{ textDecoration: "none", color: "inherit" }}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <LinkedInIcon />
-          </a>
-        </div>
-        <p>© 2024 QuitoTECH. Todos los derechos reservados.</p>
-      </footer>
+      <footer>
+  <section className="about-section">
+    <h3 className="subtitle">Nuestro Equipo</h3>
+    <div className="team-cards" style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap" }}>
+      <div className="card" style={{ width: "250px", padding: "20px", margin: "10px", backgroundColor: "#fff", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+        <h4 style={{ textAlign: "center", color: "black"}}><strong>Luis Guaygua</strong></h4>
+        <a href="https://github.com/Kr-luis" className="button" style={{ display: "block", textAlign: "center", marginTop: "10px" }}>
+          <GitHubIcon />
+        </a>
+      </div>
+
+      <div className="card" style={{ width: "250px", padding: "20px", margin: "10px", backgroundColor: "#fff", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+        <h4 style={{ textAlign: "center", color: "black"}}><strong>Eduardo Caza</strong></h4>
+        <a href="https://github.com/Eduardo-Caza" className="button" style={{ display: "block", textAlign: "center", marginTop: "10px" }}>
+          <GitHubIcon />
+        </a>
+      </div>
+
+      <div className="card" style={{ width: "250px", padding: "20px", margin: "10px", backgroundColor: "#fff", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+        <h4 style={{ textAlign: "center", color: "black"}}><strong>Yuverly Verdezoto</strong></h4>
+        <a href="https://github.com/YuverlyHidokun" className="button" style={{ display: "block", textAlign: "center", marginTop: "10px" }}>
+          <GitHubIcon />
+        </a>
+      </div>
+    </div>
+    <p>© 2024 QuitoTECH. Todos los derechos reservados.</p>
+  </section>
+</footer>
+
+
+
     </div>
   );
 };

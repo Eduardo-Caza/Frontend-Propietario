@@ -95,3 +95,94 @@ $border-color: #ddd;
     background: #581574; // Color más oscuro definido manualmente
   }
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.modal-message {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 15px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px; /* Agregar espacio entre los botones */
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #28a745; /* Color verde */
+  color: white;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-button:hover {
+  background-color: #218838;
+}
+
+.modal-close-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #dc3545; /* Color rojo */
+  color: white;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-close-button:hover {
+  background-color: #c82333;
+}
+
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4caf50; /* Verde */
+  border: none;
+  border-radius: 50%;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.floating-button:hover {
+  background-color: #45a049;
+}
+
+.floating-button-icon {
+  width: 24px;
+  height: 24px;
+}

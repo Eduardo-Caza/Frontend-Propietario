@@ -49,55 +49,84 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    gap: 40px;
+    gap: 20px;
 
     .product-info {
-      flex: 1;
+      flex: 2;
       display: flex;
-      align-items: center;
-      gap: 20px;
-      font-size: 14px;
-      color: #666;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
 
-
-
-      .product-text {
+      .product-field {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 10px;
+
+        .field-label {
+          font-weight: bold;
+          color: #333;
+          flex: 1;
+        }
+
+        .field-value {
+          color: #666;
+          flex: 2;
+        }
+
+        input {
+          flex: 2;
+          margin-left: 10px;
+          padding: 5px;
+          font-size: 14px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
       }
     }
 
-    .store-info {
+    .product-image {
       flex: 1;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      gap: 12px;
-      font-size: 14px;
-      color: #666;
+
+      img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px; /* Imagen cuadrada con bordes redondeados */
+      }
     }
   }
-  .card-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
 
-    &:hover {
-      background-color: #0056b3;
+  .button-wrapper {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+
+    .card-button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #0056b3;
+      }
     }
   }
 }
+
 .product-avatar {
-  width: 200px; /* Hacemos la imagen un poco más pequeña */
-  height: 200px;
-  border-radius: 50%; /* Imagen redonda */
+  width: 150px; /* Hacemos la imagen más pequeña */
+  height: 150px;
+  border-radius: 10px; /* Imagen cuadrada con bordes suaves */
   object-fit: cover;
 }

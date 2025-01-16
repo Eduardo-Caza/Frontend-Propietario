@@ -22,7 +22,7 @@ const NewProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Verificación de campos vacíos usando SweetAlert
     if (!formData.nombre || !formData.categoria || !formData.cantidad || !formData.precio || !file) {
       Swal.fire({
@@ -32,7 +32,7 @@ const NewProduct = () => {
       });
       return;
     }
-  
+
     const data = new FormData();
     data.append("Nombre", formData.nombre);
     data.append("Categoria", formData.categoria);
@@ -40,13 +40,13 @@ const NewProduct = () => {
     data.append("precio", formData.precio);
     data.append("id_tienda", formData.id_tienda);
     data.append("imagen", file);
-  
+
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/producto/registro`, {
         method: "POST",
         body: data,
       });
-  
+
       const result = await response.json();
       if (response.ok) {
         // Alerta de éxito con SweetAlert
@@ -80,11 +80,11 @@ const NewProduct = () => {
         text: "Hubo un problema al enviar los datos.",
       });
     }
-  };  
+  };
 
   return (
     <div className="newProduct">
-      <div><Sidebar /></div>  
+      <div><Sidebar /></div>
       <div className="newProductContainer">
         <div><Navbar /></div>
         <div className="content">
@@ -144,24 +144,72 @@ const NewProduct = () => {
                   type="number"
                   name="cantidad"
                   value={formData.cantidad}
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    // Asegura que solo se pueda ingresar hasta 3 dígitos
+                    const value = Math.max(0, Math.min(999, e.target.value)); // Limita entre 1 y 999
+                    handleInputChange({ target: { name: 'cantidad', value: value } });
+                  }}
                   placeholder="Cantidad disponible"
                   min="1"
+                  max="999"
                   required
                 />
               </div>
+
               <div className="formGroup">
                 <label>Precio</label>
                 <input
                   type="number"
                   name="precio"
                   value={formData.precio}
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    let value = e.target.value;
+
+                    // Limitar el total de dígitos a 6 (contando los decimales)
+                    const parts = value.split(".");
+                    if (parts.length > 1) {
+                      // Si tiene parte decimal, limitamos el número de dígitos a 6
+                      if (parts[0].length + parts[1].length > 6) {
+                        value = `${parts[0]}.${parts[1].slice(0, 4)}`; // Máximo 4 decimales
+                      }
+                    } else {
+                      if (value.length > 4) {
+                        value = value.slice(0, 4); // Máximo 6 dígitos en total
+                      }
+                    }
+
+                    // Si el valor tiene más de 2 decimales, cortamos a 2 decimales
+                    if (value.includes(".")) {
+                      const [integerPart, decimalPart] = value.split(".");
+                      if (decimalPart.length > 2) {
+                        value = `${integerPart}.${decimalPart.slice(0, 2)}`;
+                      }
+                    }
+
+                    handleInputChange({ target: { name: 'precio', value } });
+                  }}
+                  onBlur={(e) => {
+                    let value = e.target.value;
+
+                    // Aseguramos que siempre haya dos decimales si no los tiene
+                    if (value && !value.includes(".")) {
+                      value = parseFloat(value).toFixed(2);
+                    }
+
+                    // Limitar a 6 dígitos en total
+                    if (value.length > 6) {
+                      value = value.slice(0, 6);
+                    }
+
+                    handleInputChange({ target: { name: 'precio', value } });
+                  }}
                   placeholder="Precio del producto"
                   step="0.01"
                   required
                 />
               </div>
+
+
               <button type="submit" className="submitButton">
                 Registrar Producto
               </button>

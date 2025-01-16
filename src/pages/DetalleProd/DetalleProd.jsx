@@ -98,7 +98,7 @@ export default function ProductDetail() {
       setProducto(response.data); // Actualizar el producto con los nuevos datos
 
       // Redirigir al usuario a la misma página para recargar los datos
-      navigate(`/producto/${id}`);
+      navigate(`/productos`);
     } catch (error) {
       Swal.fire("Error", "No se pudo actualizar el producto", "error");
     }
@@ -171,7 +171,47 @@ export default function ProductDetail() {
                       type="number"
                       name="precio"
                       value={formData.precio}
-                      onChange={handleInputChange}
+                      onChange={(e) => {
+                        let value = e.target.value;
+
+                        // Limitar el total de dígitos a 6 (contando los decimales)
+                        const parts = value.split(".");
+                        if (parts.length > 1) {
+                          // Si tiene parte decimal, limitamos el número de dígitos a 6
+                          if (parts[0].length + parts[1].length > 6) {
+                            value = `${parts[0]}.${parts[1].slice(0, 4)}`; // Máximo 4 decimales
+                          }
+                        } else {
+                          if (value.length > 4) {
+                            value = value.slice(0, 4); // Máximo 6 dígitos en total
+                          }
+                        }
+
+                        // Si el valor tiene más de 2 decimales, cortamos a 2 decimales
+                        if (value.includes(".")) {
+                          const [integerPart, decimalPart] = value.split(".");
+                          if (decimalPart.length > 2) {
+                            value = `${integerPart}.${decimalPart.slice(0, 2)}`;
+                          }
+                        }
+
+                        handleInputChange({ target: { name: 'precio', value } });
+                      }}
+                      onBlur={(e) => {
+                        let value = e.target.value;
+
+                        // Aseguramos que siempre haya dos decimales si no los tiene
+                        if (value && !value.includes(".")) {
+                          value = parseFloat(value).toFixed(2);
+                        }
+
+                        // Limitar a 6 dígitos en total
+                        if (value.length > 6) {
+                          value = value.slice(0, 6);
+                        }
+
+                        handleInputChange({ target: { name: 'precio', value } });
+                      }}
                     />
                   ) : (
                     <p>{producto?.precio}</p>
@@ -195,7 +235,14 @@ export default function ProductDetail() {
                       type="number"
                       name="Cantidad"
                       value={formData.Cantidad}
-                      onChange={handleInputChange}
+                      onChange={(e) => {
+                        // Convierte el valor a número y asegura que esté en el rango de 1 a 999
+                        const value = Math.max(1, Math.min(999, parseInt(e.target.value, 10) || 0)); // Si el valor no es un número, se asigna 0
+                        handleInputChange({ target: { name: 'Cantidad', value } });
+                      }}
+                      min="1"
+                      max="999"
+                      placeholder="Cantidad"
                     />
                   ) : (
                     <p>{producto?.Cantidad}</p>
