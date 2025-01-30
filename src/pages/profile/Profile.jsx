@@ -4,32 +4,36 @@ import Navbar from "../../components/navbar/Navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom"; // Asegúrate de tener acceso a navigate
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const [usuario, setUsuario] = useState(null);
   const [tienda, setTienda] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isEditing, setIsEditing] = useState(false); // Estado para controlar el modo de edición
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
     email: "",
     numero: "",
     alerta_cantidad: "",
-    direccion: "", // Corregir: asegurarse que esté en minúsculas
+    direccion: "",
     nombreTienda: "",
-    password: "", // Si el usuario desea cambiar la contraseña
-    imagen: null, // Para manejar la imagen subida
+    password: "",
+    imagen: null,
   });
-  const [emailChanged, setEmailChanged] = useState(false); // Estado para verificar si el email cambió
+  const [emailChanged, setEmailChanged] = useState(false);
   const navigate = useNavigate();
-
   const userId = localStorage.getItem("id_usuario");
 
   // Función para manejar el clic de editar
   const handleEditClick = () => {
+    Swal.fire({
+      title: "Le recordamos que tiene que ingresar su contraseña para evitar la perdida de su cuenta.",
+      icon: "info",
+      confirmButtonText: "Aceptar",
+    });
     setIsEditing(true);
   };
 
@@ -52,87 +56,127 @@ export default function Profile() {
     if (file) {
       setFormData({
         ...formData,
-        imagen: file, // Guardar la imagen seleccionada en el estado
+        imagen: file,
       });
     }
   };
 
   // Función para manejar el envío del formulario
   const handleSaveClick = async () => {
-    try {
-      const form = new FormData();
-      form.append("nombre", formData.nombre);
-      form.append("apellido", formData.apellido);
-      form.append("email", formData.email);
-      form.append("numero", formData.numero);
-      form.append("alerta_cantidad", formData.alerta_cantidad);
-      form.append("Direccion", formData.Direccion);
-      form.append("nombreTienda", formData.nombreTienda);
-      form.append("password", formData.password);
+    // Verificación de campos vacíos
+    const camposVacios = Object.values(formData).some((value) => !value && value !== 0 && value !== null);
 
-      if (formData.imagen) {
-        form.append("imagen", formData.imagen); // Agregar la imagen al formulario
-      }
-
-      const response = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/propietario/${userId}`,
-        form,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Es importante para enviar archivos
-          },
-        }
-      );
-
-      // Si todo fue correcto, actualizar el perfil en el estado
-      setUsuario(response.data.usuario);
-      setTienda(response.data.tienda);
-      setIsEditing(false); // Desactivar el modo de edición
-
-      // Mostrar mensaje de éxito
+    if (formData.password.trim() === "") {
       Swal.fire({
-        icon: "success",
-        title: "Éxito",
-        text: response.data.msg,
+        icon: "error",
+        title: "Contraseña vacía",
+        text: "Por favor, ingrese una contraseña válida si desea cambiarla.",
       });
+      return;
+    }
 
-      // Recargar los datos del perfil después de guardar
-      const fetchProfileData = async () => {
+    if (camposVacios) {
+      Swal.fire({
+        icon: "error",
+        title: "Campos vacíos",
+        text: "Por favor, complete todos los campos antes de guardar los cambios.",
+      });
+      return;
+    }
+
+    // Muestra la alerta de confirmación con dos botones
+    Swal.fire({
+      title: "¿Está seguro de que desea guardar los cambios?",
+      text: "Recuerde que debe ingresar su contraseña para confirmar los cambios.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, estoy seguro",
+      cancelButtonText: "No, no estoy seguro",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
         try {
-          const response = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/propietario/perfil/${userId}`
+          const form = new FormData();
+          form.append("nombre", formData.nombre);
+          form.append("apellido", formData.apellido);
+          form.append("email", formData.email);
+          form.append("numero", formData.numero);
+          form.append("alerta_cantidad", formData.alerta_cantidad);
+          form.append("Direccion", formData.direccion);
+          form.append("nombreTienda", formData.nombreTienda);
+
+          if (formData.password && formData.password.trim() !== "") {
+            form.append("password", formData.password);
+          }
+
+          if (formData.imagen) {
+            form.append("imagen", formData.imagen);
+          }
+
+          const response = await axios.put(
+            `${import.meta.env.VITE_BACKEND_URL}/propietario/${userId}`,
+            form,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
           );
+
           setUsuario(response.data.usuario);
           setTienda(response.data.tienda);
-          setFormData({
-            nombre: response.data.usuario.nombre,
-            apellido: response.data.usuario.apellido,
-            email: response.data.usuario.email,
-            numero: response.data.usuario.numero,
-            alerta_cantidad: response.data.usuario.alerta_cantidad,
-            Direccion: response.data.tienda.direccion, // Asegúrate que la dirección se mantenga
-            nombreTienda: response.data.tienda.nombre,
+          setIsEditing(false);
+
+          Swal.fire({
+            icon: "success",
+            title: "Éxito",
+            text: response.data.msg,
           });
-        } catch (err) {
-          setError("No se pudo cargar el perfil o la tienda. Intente más tarde.");
+
+          // Recargar datos de perfil
+          const fetchProfileData = async () => {
+            try {
+              const response = await axios.get(
+                `${import.meta.env.VITE_BACKEND_URL}/propietario/perfil/${userId}`
+              );
+              setUsuario(response.data.usuario);
+              setTienda(response.data.tienda);
+              setFormData({
+                nombre: response.data.usuario.nombre,
+                apellido: response.data.usuario.apellido,
+                email: response.data.usuario.email,
+                numero: response.data.usuario.numero,
+                alerta_cantidad: response.data.usuario.alerta_cantidad,
+                direccion: response.data.tienda.direccion,
+                nombreTienda: response.data.tienda.nombre,
+              });
+            } catch (err) {
+              setError("No se pudo cargar el perfil o la tienda. Intente más tarde.");
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No se pudo cargar el perfil o la tienda. Intente más tarde.",
+              });
+            }
+          };
+          fetchProfileData();
+        } catch (error) {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: "No se pudo cargar el perfil o la tienda. Intente más tarde.",
+            text: "No se pudo actualizar la información. Intente más tarde.",
           });
         }
-      };
-      fetchProfileData();
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "No se pudo actualizar la información. Intente más tarde.",
-      });
-    }
+      } else {
+        // Si el usuario elige "No, no estoy seguro", no hace nada
+        Swal.fire({
+          icon: "info",
+          title: "Cancelado",
+          text: "No se realizaron cambios.",
+        });
+      }
+    });
   };
 
-  // Obtener los datos del perfil
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -148,7 +192,7 @@ export default function Profile() {
           email: response.data.usuario.email,
           numero: response.data.usuario.numero,
           alerta_cantidad: response.data.usuario.alerta_cantidad,
-          Direccion: response.data.tienda.direccion, // Asegúrate de que esté en minúsculas
+          direccion: response.data.tienda.direccion,
           nombreTienda: response.data.tienda.nombre,
         });
       } catch (err) {
@@ -198,7 +242,6 @@ export default function Profile() {
                   className="user-avatar"
                 />
                 <div className="user-text">
-                  {/* Información editable */}
                   <p><strong>Nombre:</strong></p>
                   {isEditing ? (
                     <input
@@ -251,7 +294,6 @@ export default function Profile() {
                     <p>{usuario?.numero}</p>
                   )}
 
-                  {/* Solo mostrar la alerta_cantidad y password cuando estamos en modo de edición */}
                   {isEditing && (
                     <>
                       <p><strong>Alerta de Cantidad:</strong></p>
@@ -261,8 +303,8 @@ export default function Profile() {
                         value={formData.alerta_cantidad}
                         onChange={handleInputChange}
                       />
-
                       <p><strong>Contraseña:</strong></p>
+                      <p>Porfavor si no ingresa su contraseña no podra guardar cambios</p>
                       <input
                         type="password"
                         name="password"
@@ -271,68 +313,52 @@ export default function Profile() {
                       />
                     </>
                   )}
+
+                  <p><strong>Tienda:</strong></p>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="nombreTienda"
+                      value={formData.nombreTienda}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <p>{tienda?.nombre}</p>
+                  )}
+
+                  <p><strong>Dirección de la Tienda:</strong></p>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="direccion"
+                      value={formData.direccion}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <p>{tienda?.direccion}</p>
+                  )}
+                  {isEditing && (
+                    <>
+                      <p><strong>Imagen:</strong></p>
+                      <input
+                        type="file"
+                        onChange={handleImageChange}
+                      />
+                    </>
+                  )}
+                  <div className="buttons">
+                    {isEditing ? (
+                      <button onClick={handleSaveClick}>Guardar Cambios</button>
+                    ) : (
+                      <button onClick={handleEditClick}>Editar</button>
+                    )}
+                  </div>
                 </div>
               </div>
-
-              <div className="store-info">
-                <p><strong>Nombre de la Tienda:</strong></p>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="nombreTienda"
-                    value={formData.nombreTienda}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  <p>{tienda?.nombre}</p>
-                )}
-                <p><strong>Dirección:</strong></p>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="Direccion"
-                    value={formData.Direccion}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  <p>{tienda?.direccion}</p>
-                )}
-
-                {/* Opción para subir una nueva imagen, solo en modo de edición */}
-                {isEditing && (
-                  <>
-                    <p><strong>Imagen de perfil:</strong></p>
-                    <input
-                      type="file"
-                      name="imagen"
-                      onChange={handleImageChange}
-                    />
-                  </>
-                )}
-              </div>
             </div>
-
-            {/* Botones de acción */}
-            {isEditing ? (
-              <div>
-                <button className="card-button" onClick={handleSaveClick}>
-                  Guardar Cambios
-                </button>
-                <button
-                  className="card-button"
-                  onClick={() => setIsEditing(false)} // Cancelar edición
-                >
-                  Cancelar
-                </button>
-              </div>
-            ) : (
-              <button className="card-button" onClick={handleEditClick}>
-                Cambiar Información
-              </button>
-            )}
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>
+  );
 }
