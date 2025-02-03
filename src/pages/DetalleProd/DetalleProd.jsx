@@ -8,20 +8,19 @@ import "./DetalleProd.scss";
 
 export default function ProductDetail() {
   const [producto, setProducto] = useState(null);
-  const [isEditing, setIsEditing] = useState(false); // Estado para controlar el modo de edición
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     Nombre: "",
     Categoria: "",
     precio: "",
-    Estado: "",
+    Estado: true, // Valor booleano para "Disponible"
     Cantidad: "",
-    imagen: null, // Para manejar la imagen
+    imagen: null,
   });
   const [error, setError] = useState(null);
-  const { id } = useParams(); // Obtener el id desde la URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // Obtener los detalles del producto
   useEffect(() => {
     const fetchProducto = async () => {
       try {
@@ -31,9 +30,9 @@ export default function ProductDetail() {
           Nombre: response.data.Nombre,
           Categoria: response.data.Categoria,
           precio: response.data.precio,
-          Estado: response.data.Estado,
+          Estado: response.data.Estado, // Estado: true o false
           Cantidad: response.data.Cantidad,
-          imagenUrl: response.data.imagenUrl || "", // Establecer imagenUrl si existe
+          imagenUrl: response.data.imagenUrl || "",
         });
       } catch (err) {
         setError("No se pudo cargar el producto");
@@ -44,12 +43,10 @@ export default function ProductDetail() {
     fetchProducto();
   }, [id]);
 
-  // Función para manejar el clic de editar
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
-  // Función para manejar el cambio en los campos del formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -58,18 +55,16 @@ export default function ProductDetail() {
     });
   };
 
-  // Función para manejar el cambio de imagen
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setFormData({
         ...formData,
-        imagen: file, // Guardar la imagen seleccionada en el estado
+        imagen: file,
       });
     }
   };
 
-  // Función para manejar el envío del formulario (guardar cambios)
   const handleSaveClick = async () => {
     const form = new FormData();
     form.append("Nombre", formData.Nombre);
@@ -79,7 +74,7 @@ export default function ProductDetail() {
     form.append("Cantidad", formData.Cantidad);
 
     if (formData.imagen) {
-      form.append("imagen", formData.imagen); // Agregar la imagen al formulario
+      form.append("imagen", formData.imagen);
     }
 
     try {
@@ -88,23 +83,21 @@ export default function ProductDetail() {
         form,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Es importante para enviar archivos
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
       Swal.fire("Éxito", "Producto actualizado correctamente", "success");
-      setIsEditing(false); // Desactivar el modo de edición
-      setProducto(response.data); // Actualizar el producto con los nuevos datos
+      setIsEditing(false);
+      setProducto(response.data);
 
-      // Redirigir al usuario a la misma página para recargar los datos
       navigate(`/productos`);
     } catch (error) {
       Swal.fire("Error", "No se pudo actualizar el producto", "error");
     }
   };
 
-  // Función para manejar la cancelación de edición
   const handleCancelEdit = () => {
     setIsEditing(false);
     setFormData({
@@ -118,7 +111,7 @@ export default function ProductDetail() {
   };
 
   const handleGoBack = () => {
-    navigate(-1); // Volver a la página anterior
+    navigate(-1);
   };
 
   if (error) {
@@ -155,12 +148,18 @@ export default function ProductDetail() {
 
                   <p><strong>Categoría:</strong></p>
                   {isEditing ? (
-                    <input
-                      type="text"
+                    <select
                       name="Categoria"
                       value={formData.Categoria}
                       onChange={handleInputChange}
-                    />
+                    >
+                      <option value="Mandos">Mandos</option>
+                      <option value="Consolas">Consolas</option>
+                      <option value="Videojuegos">Videojuegos</option>
+                      <option value="Perifericos">Perifericos</option>
+                      <option value="ComponentesPC">Componentes PC</option>
+                      <option value="Otros">Otros</option>
+                    </select>
                   ) : (
                     <p>{producto?.Categoria}</p>
                   )}
@@ -171,47 +170,7 @@ export default function ProductDetail() {
                       type="number"
                       name="precio"
                       value={formData.precio}
-                      onChange={(e) => {
-                        let value = e.target.value;
-
-                        // Limitar el total de dígitos a 6 (contando los decimales)
-                        const parts = value.split(".");
-                        if (parts.length > 1) {
-                          // Si tiene parte decimal, limitamos el número de dígitos a 6
-                          if (parts[0].length + parts[1].length > 6) {
-                            value = `${parts[0]}.${parts[1].slice(0, 4)}`; // Máximo 4 decimales
-                          }
-                        } else {
-                          if (value.length > 4) {
-                            value = value.slice(0, 4); // Máximo 6 dígitos en total
-                          }
-                        }
-
-                        // Si el valor tiene más de 2 decimales, cortamos a 2 decimales
-                        if (value.includes(".")) {
-                          const [integerPart, decimalPart] = value.split(".");
-                          if (decimalPart.length > 2) {
-                            value = `${integerPart}.${decimalPart.slice(0, 2)}`;
-                          }
-                        }
-
-                        handleInputChange({ target: { name: 'precio', value } });
-                      }}
-                      onBlur={(e) => {
-                        let value = e.target.value;
-
-                        // Aseguramos que siempre haya dos decimales si no los tiene
-                        if (value && !value.includes(".")) {
-                          value = parseFloat(value).toFixed(2);
-                        }
-
-                        // Limitar a 6 dígitos en total
-                        if (value.length > 6) {
-                          value = value.slice(0, 6);
-                        }
-
-                        handleInputChange({ target: { name: 'precio', value } });
-                      }}
+                      onChange={handleInputChange}
                     />
                   ) : (
                     <p>{producto?.precio}</p>
@@ -219,12 +178,14 @@ export default function ProductDetail() {
 
                   <p><strong>Estado:</strong></p>
                   {isEditing ? (
-                    <input
-                      type="text"
+                    <select
                       name="Estado"
                       value={formData.Estado}
                       onChange={handleInputChange}
-                    />
+                    >
+                      <option value={true}>Disponible</option>
+                      <option value={false}>No disponible</option>
+                    </select>
                   ) : (
                     <p>{producto?.Estado ? "Disponible" : "No disponible"}</p>
                   )}
@@ -235,14 +196,7 @@ export default function ProductDetail() {
                       type="number"
                       name="Cantidad"
                       value={formData.Cantidad}
-                      onChange={(e) => {
-                        // Convierte el valor a número y asegura que esté en el rango de 1 a 999
-                        const value = Math.max(1, Math.min(999, parseInt(e.target.value, 10) || 0)); // Si el valor no es un número, se asigna 0
-                        handleInputChange({ target: { name: 'Cantidad', value } });
-                      }}
-                      min="1"
-                      max="999"
-                      placeholder="Cantidad"
+                      onChange={handleInputChange}
                     />
                   ) : (
                     <p>{producto?.Cantidad}</p>
@@ -270,17 +224,13 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            {/* Botones de acción */}
             <div className="button-wrapper">
               {isEditing ? (
                 <div>
                   <button className="card-button" onClick={handleSaveClick}>
                     Guardar Cambios
                   </button>
-                  <button
-                    className="card-button"
-                    onClick={handleCancelEdit} // Cancelar edición
-                  >
+                  <button className="card-button" onClick={handleCancelEdit}>
                     Cancelar
                   </button>
                 </div>

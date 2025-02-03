@@ -16,7 +16,7 @@ export default function Profile() {
     nombre: "",
     apellido: "",
     email: "",
-    numero: "",
+    numero: null,
     alerta_cantidad: "",
     direccion: "",
     nombreTienda: "",
